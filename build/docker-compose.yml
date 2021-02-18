@@ -1,0 +1,25 @@
+version: '3'
+services:
+  service:
+    image: test-task-service
+    depends_on:
+      - test-task-service-mysql
+    ports:
+      - "8080:8080"
+    env_file:
+      - test-task-service.env
+    container_name: test-task-service
+
+  test-task-service-mysql:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test_task_database
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    container_name: test-task-service-mysql
