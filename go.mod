@@ -14,6 +14,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/namsral/flag v1.7.4-pre
 	github.com/prometheus/client_golang v1.8.0
+	github.com/rs/cors v1.7.0
 	github.com/sarulabs/di v2.0.0+incompatible
 	github.com/sfreiberg/gotwilio v0.0.0-20201211181435-c426a3710ab5
 	github.com/slack-go/slack v0.7.4

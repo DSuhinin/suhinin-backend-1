@@ -53,6 +53,7 @@ func (r UserRepository) Create(model *auth.UserModel) error {
 }
 
 // GetByEmail get `user` record by it's email.
+//nolint
 func (r UserRepository) GetByEmail(email string) (*auth.UserModel, error) {
 	var model auth.UserModel
 	if err := r.db.Get(&model, `

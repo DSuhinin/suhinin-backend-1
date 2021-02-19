@@ -4,11 +4,12 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/dsuhinin/suhinin-backend-1/core/http/health"
+
 	"github.com/gorilla/mux"
 
 	"github.com/dsuhinin/suhinin-backend-1/core/errors"
 	"github.com/dsuhinin/suhinin-backend-1/core/http/response"
-	"github.com/dsuhinin/suhinin-backend-1/core/http/response/serializer"
 	"github.com/dsuhinin/suhinin-backend-1/core/log"
 )
 
@@ -38,22 +39,25 @@ type RouterProvider interface {
 
 // Router is a Application router.
 type Router struct {
-	logger          log.Logger
-	router          *mux.Router
-	errorSerializer serializer.Serializer
+	logger               log.Logger
+	router               *mux.Router
+	healthDependencyList []health.Provider
 }
 
 // NewRouter returns a new Router instance.
 func NewRouter(logger log.Logger, options ...func(*Router)) *Router {
 
 	r := Router{
-		logger: logger,
-		router: mux.NewRouter(),
+		logger:               logger,
+		router:               mux.NewRouter(),
+		healthDependencyList: []health.Provider{},
 	}
 
 	for _, option := range options {
 		option(&r)
 	}
+
+	r.initializeServiceRouteList()
 
 	return &r
 }
@@ -71,17 +75,17 @@ func (r *Router) HandleResponse(w http.ResponseWriter, req *http.Request, h Hand
 	if resp.IsError() {
 		httpError := errors.Cause(resp.GetError(), (*errors.HTTPError)(nil))
 		if httpError == nil {
-			r.processUnhandledError(w, req, resp.GetError())
+			r.processUnhandledError(w, resp.GetError())
 			return
 		}
 
-		r.processServiceError(w, req, resp)
+		r.processServiceError(w, resp)
 		return
 	}
 
 	data, err := resp.GetData()
 	if err != nil {
-		r.processDataError(w, req, errors.WithMessage(err, "data serialization error"))
+		r.processDataError(w, errors.WithMessage(err, "data serialization error"))
 		return
 	}
 
@@ -91,7 +95,7 @@ func (r *Router) HandleResponse(w http.ResponseWriter, req *http.Request, h Hand
 
 // processDataError makes processing of the error occurred
 // because of data serialization or data post processing.
-func (r *Router) processDataError(w http.ResponseWriter, req *http.Request, err error) {
+func (r *Router) processDataError(w http.ResponseWriter, err error) {
 
 	r.logger.Error("%+v", err)
 
@@ -102,7 +106,6 @@ func (r *Router) processDataError(w http.ResponseWriter, req *http.Request, err 
 // in case of validation or any other service error.
 func (r *Router) processServiceError(
 	w http.ResponseWriter,
-	req *http.Request,
 	response response.Provider,
 ) {
 
@@ -114,7 +117,7 @@ func (r *Router) processServiceError(
 
 	data, err := response.GetData()
 	if err != nil {
-		r.processDataError(w, req, errors.WithMessage(err, "data serialization error"))
+		r.processDataError(w, errors.WithMessage(err, "data serialization error"))
 		return
 	}
 
@@ -127,7 +130,7 @@ func (r *Router) processServiceError(
 }
 
 // processUnhandledError makes processing of the unhandled service error.
-func (r *Router) processUnhandledError(w http.ResponseWriter, req *http.Request, err error) {
+func (r *Router) processUnhandledError(w http.ResponseWriter, err error) {
 
 	r.logger.Error("internal unhandled error: %+v", err)
 
@@ -207,4 +210,49 @@ func (r *Router) Trace(path string, h Handler) {
 // Handle function allows you to accept all types of requests to specified route.
 func (r *Router) Handle(path string, h HandlerFunc) {
 	r.router.PathPrefix(path).Handler(h)
+}
+
+//
+// initializeServiceRouteList makes setup of standard service endpoints,
+// like: /service/info,
+// 		 /service/status
+//
+func (r *Router) initializeServiceRouteList() {
+
+	r.Get(RouteServiceStatus, func(req *http.Request) response.Provider {
+		return response.NewJSON(nil)
+	})
+
+	r.Get(RouteServiceInfo, func(req *http.Request) response.Provider {
+		status := http.StatusOK
+		dependencies := make(map[string]*health.Data, len(r.healthDependencyList))
+		for _, dependency := range r.healthDependencyList {
+			h, err := dependency.GetHealth()
+			if err != nil {
+				r.logger.Health("service health check error: %+v", err)
+			}
+
+			if h.GetStatus() != http.StatusOK {
+				status = h.GetStatus()
+			}
+
+			dependencies[h.GetName()] = h
+		}
+
+		return response.NewJSON(
+			health.NewServiceInfoResponse(dependencies),
+		).SetStatus(status)
+
+	})
+}
+
+//
+// SetupHealthDependencyList makes setup of service dependency list.
+// This information is used to provide extended health info through
+// the standard service health /_service/info endpoint.
+//
+func SetupHealthDependencyList(o ...health.Provider) func(*Router) {
+	return func(r *Router) {
+		r.healthDependencyList = o
+	}
 }

@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
-	"github.com/dsuhinin/suhinin-backend-1/core/http"
+	coreHTTP "github.com/dsuhinin/suhinin-backend-1/core/http"
+	"github.com/dsuhinin/suhinin-backend-1/core/http/cors"
 	"github.com/dsuhinin/suhinin-backend-1/core/log"
 
 	"github.com/dsuhinin/suhinin-backend-1/src/cfg/config"
@@ -21,9 +23,14 @@ func main() {
 	// DI
 	diContainer := initDIContainer(c, l)
 
+	// Set CORS.
+	var h http.Handler = diContainer.GetHTTPRouter().GetMuxRouter()
+	if c.GetCORSEnable() {
+		h = cors.WrapHTTPHandler(h, c)
+	}
+
 	// Run Service
-	var h = diContainer.GetHTTPRouter().GetMuxRouter()
-	http.NewService(
+	coreHTTP.NewService(
 		config.ServiceName,
 		c.GetServerHTTPAddress(),
 		h,

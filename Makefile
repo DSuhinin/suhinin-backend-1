@@ -77,17 +77,17 @@ service_start_dependencies:
 	@echo ">>> Start all Service dependencies."
 	@docker-compose $(DOCKER_COMPOSE_OPTIONS) up \
 	-d \
-	test-task-service-mysql
+	test-task-service-mysql test-task-service-web
 
 service_start: service_build service_start_dependencies
-	@echo ">>> Sleeping 30 seconds until dependencies start."
-	@sleep 30
+	@echo ">>> Sleeping 10 seconds until dependencies start."
+	@sleep 10
 	@echo ">>> Starting service."
 	@echo ">>> Starting up service container."
 	@docker-compose $(DOCKER_COMPOSE_OPTIONS) up -d $(SERVICE)
 
 service_stop:
-	@echo ">>> Stopping lambda."
+	@echo ">>> Stopping service."
 	@docker-compose  $(DOCKER_COMPOSE_OPTIONS) down -v --remove-orphans
 
 service_restart: service_stop service_start

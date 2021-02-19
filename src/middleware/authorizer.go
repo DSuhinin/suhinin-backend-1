@@ -22,10 +22,12 @@ const (
 	BearerAuthorization = "Bearer"
 )
 
+type ctxKey struct{}
+
 // Context `user_id` key.
-const (
-	ContextUserIDKey    = "user_id"
-	ContextUserTokenKey = "user_token"
+var (
+	ContextUserIDKey    ctxKey
+	ContextUserTokenKey ctxKey
 )
 
 // WithAuthorization makes validation of Authorization header.

@@ -1,8 +1,9 @@
 version: '3'
 services:
-  service:
+  test-task-service:
     image: test-task-service
     depends_on:
+      - test-task-service-web
       - test-task-service-mysql
     ports:
       - "8080:8080"
@@ -16,10 +17,15 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: test_task_database
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
     volumes:
-      - ./mysql:/docker-entrypoint-initdb.d
+      - ./mysql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     ports:
       - "3306:3306"
     container_name: test-task-service-mysql
+
+  test-task-service-web:
+    image: flashspys/nginx-static
+    ports:
+      - 8081:80
+    volumes:
+      - ./web:/static

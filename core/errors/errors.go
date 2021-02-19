@@ -5,10 +5,7 @@ import (
 	"reflect"
 )
 
-//
 // Wrap wraps errors list into an error chain.
-// TODO: if there are two enchainers, raise an error.
-//
 func Wrap(errs ...error) Chainer {
 	var (
 		enchainer          Chainer

@@ -43,6 +43,13 @@ func (c *Config) Parse() error {
 				parameter.(ParameterStringProvider).getDefault(),
 				parameter.getUsage(),
 			)
+		case ParameterTypeBool:
+			flag.BoolVar(
+				parameter.(ParameterBoolProvider).getValuePointer(),
+				parameter.getName(),
+				parameter.(ParameterBoolProvider).getDefault(),
+				parameter.getUsage(),
+			)
 		case ParameterTypeLogger:
 			flag.StringVar(
 				parameter.(ParameterLoggerProvider).getValuePointer(),
@@ -69,18 +76,20 @@ func (c *Config) Parse() error {
 
 // IsParsed returns the parsing status of Config object.
 func (c *Config) IsParsed() bool {
-
 	return c.isParsed
 }
 
 // GetString returns the string representation of ENV parameter.
 func (c *Config) GetString(p string) string {
-
 	return c.parameters[p].(ParameterStringProvider).getValue()
+}
+
+// GetBool returns the boolean representation of ENV parameter.
+func (c *Config) GetBool(p string) bool {
+	return c.parameters[p].(ParameterBoolProvider).getValue()
 }
 
 // GetLogLevel returns the parsed logger configuration.
 func (c *Config) GetLogLevel(p string) string {
-
 	return c.parameters[p].(ParameterLoggerProvider).getLevel()
 }

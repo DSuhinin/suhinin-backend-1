@@ -23,8 +23,20 @@ $('#login-btn').click(function (e) {
             email: $('#signin input[name="email"]').val(),
             password: $('#signin input[name="password"]').val(),
         }),
-        success: function () {
-            window.location.replace("members.html");
+        statusCode: {
+            200: function(resp) {
+                localStorage.setItem("token", resp.token);
+                window.location.replace("members.html");
+            },
+            400: function () {
+                alert("Incorrect credentials");
+            },
+            404: function () {
+                alert("Incorrect credentials");
+            },
+            401: function() {
+                alert("Incorrect credentials");
+            }
         }
     })
 });
@@ -41,15 +53,37 @@ $('#register-btn').click(function (e) {
             password: $('#signup input[name="password"]').val(),
             confirm_password: $('#signup input[name="confirm-password"]').val(),
         }),
-        success: function () {
-            alert("Success Signup!");
+        statusCode: {
+            200: function() {
+                window.location.replace("index.html");
+            },
+            400: function(data) {
+                alert(data.responseJSON.message);
+            }
         }
     })
 });
 
 $('#logout').click(function (e) {
     e.preventDefault();
-    alert(localStorage.getItem("jwt-token"));
+    $.ajax({
+        type: "GET",
+        url: 'http://localhost:8080/auth/signout',
+        async: false,
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
+        statusCode: {
+            200: function() {
+                localStorage.removeItem("token");
+                window.location.replace("index.html");
+            },
+            401: function() {
+                localStorage.removeItem("token");
+                window.location.replace("index.html");
+            }
+        },
+    })
 });
 
 

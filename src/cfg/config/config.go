@@ -6,14 +6,21 @@ import (
 
 // Configuration parameter names.
 const (
-	ConfJWTKey            = "JWT_KEY"
-	ConfMySQLUser         = "MYSQL_USER"
-	ConfMySQLPass         = "MYSQL_PASS"
-	ConfMySQLHost         = "MYSQL_HOST"
-	ConfMySQLPort         = "MYSQL_PORT"
-	ConfMySQLDBName       = "MYSQL_DB_NAME"
-	ConfServerHTTPAddress = "SERVER_ADDRESS"
-	ConfLogLevel          = "LOG_LEVEL"
+	ConfJWTKey               = "JWT_KEY"
+	ConfMySQLUser            = "MYSQL_USER"
+	ConfMySQLPass            = "MYSQL_PASS"
+	ConfMySQLHost            = "MYSQL_HOST"
+	ConfMySQLPort            = "MYSQL_PORT"
+	ConfMySQLDBName          = "MYSQL_DB_NAME"
+	ConfServerHTTPAddress    = "SERVER_ADDRESS"
+	ConfLogLevel             = "LOG_LEVEL"
+	ConfCORSEnable           = "CORS_ENABLED"
+	ConfCORSEnableDebug      = "CORS_ENABLED_DEBUG"
+	ConfCORSExposedHeaders   = "CORS_EXPOSED_HEADERS"
+	ConfCORSAllowedMethods   = "CORS_ALLOWED_METHODS"
+	ConfCORSAllowedHeaders   = "CORS_ALLOWED_HEADERS"
+	ConfCORSAllowedOrigins   = "CORS_ALLOWED_ORIGINS"
+	ConfCORSAllowCredentials = "CORS_ALLOW_CREDENTIALS"
 )
 
 // General constants.
@@ -69,6 +76,41 @@ func New() (*Config, error) {
 			ConfMySQLPort,
 			"MySQL server host.",
 			"3306",
+		),
+		config.NewBool(
+			ConfCORSEnable,
+			"Enable/Disable CORS.",
+			false,
+		),
+		config.NewBool(
+			ConfCORSEnableDebug,
+			"Enable/Disable CORS debug.",
+			false,
+		),
+		config.NewString(
+			ConfCORSExposedHeaders,
+			"https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers",
+			"",
+		),
+		config.NewString(
+			ConfCORSAllowedMethods,
+			"https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods",
+			"",
+		),
+		config.NewString(
+			ConfCORSAllowedHeaders,
+			"https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods",
+			"",
+		),
+		config.NewString(
+			ConfCORSAllowedOrigins,
+			"https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin",
+			"",
+		),
+		config.NewBool(
+			ConfCORSAllowCredentials,
+			"https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials",
+			false,
 		),
 	)
 

@@ -6,6 +6,7 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"github.com/dsuhinin/suhinin-backend-1/core/errors"
+
 	"github.com/dsuhinin/suhinin-backend-1/src/dao/auth"
 )
 
@@ -54,6 +55,7 @@ func (r TokenRepository) Create(model *auth.TokenModel) error {
 }
 
 // GetByUserIDAndToken get `token` record by `user_id` and `token`.
+// nolint
 func (r TokenRepository) GetByUserIDAndToken(userID int, token string) error {
 	var model auth.TokenModel
 	if err := r.db.Get(&model, `
@@ -77,6 +79,7 @@ func (r TokenRepository) GetByUserIDAndToken(userID int, token string) error {
 }
 
 // Delete deletes Token entity by `token` value.
+//nolint
 func (r TokenRepository) Delete(token string) error {
 	if _, err := r.db.Query(`
 		DELETE 

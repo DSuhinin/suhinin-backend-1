@@ -4,10 +4,8 @@ import (
 	"testing"
 )
 
-//
 // AssertAppError checks is any of errors inside the error queue passed as an err parameter
 // contains the error of type expectedError.
-//
 func AssertAppError(t *testing.T, expectedError error, err error) bool {
 	if expectedError == err {
 		return true

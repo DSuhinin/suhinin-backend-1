@@ -1,4 +1,5 @@
-create table test_task_database.users
+use test_task_database;
+create table users
 (
     id int auto_increment
         primary key,
@@ -9,7 +10,7 @@ create table test_task_database.users
         unique (email)
 );
 
-create table test_task_database.tokens
+create table tokens
 (
     id int auto_increment
         primary key,

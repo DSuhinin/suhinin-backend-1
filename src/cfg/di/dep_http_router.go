@@ -18,7 +18,10 @@ func (c *Container) registerHTTPRouter() error {
 	if err := c.RegisterDependency(
 		DefHTTPRouter,
 		func(ctx di.Context) (interface{}, error) {
-			r := http.NewRouter(c.GetLogger())
+			r := http.NewRouter(
+				c.GetLogger(),
+				http.SetupHealthDependencyList(c.GetMySQLClient()),
+			)
 			routes.InitAuthRouteList(
 				r,
 				c.GetServiceTransport(),
