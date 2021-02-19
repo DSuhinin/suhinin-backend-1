@@ -6,14 +6,14 @@
 * [Environment Variables](#environment-variables)
 * [Endpoints](#endpoints) 
   * [Auth Endpoints](#server-endpoints)
-    * [POST /auth/signin](#auth-signin)
-    * [POST /auth/signup]
-    * [GET /auth/signout]
+    * [POST /auth/signin](#post-authsignin)
+    * [POST /auth/signup](#post-authsignup)
+    * [GET /auth/signout](#get-authsignout)
   * [Member Endpoints](#member-endpoints)
-    * [GET /members]
+    * [GET /members](#get-members)
   * [Service Endpoints](#service-endpoints)
-    * [POST /service/status]
-    * [GET /service/info]
+    * [POST /service/status](#get-serviceinfo)
+    * [GET /service/info](#get-servicestatus)
 
 * [Appendix A. Response codes](#appendix-a-response-codes)
 * [Appendix B. Request headers](#appendix-b-request-headers)
