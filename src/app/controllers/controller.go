@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/dsuhinin/suhinin-backend-1/core/http/response"
+	"github.com/dsuhinin/suhinin-backend-1/src/dep/jwt"
 
 	"github.com/dsuhinin/suhinin-backend-1/src/api/request"
 	"github.com/dsuhinin/suhinin-backend-1/src/app/validators"
@@ -22,16 +23,19 @@ type Provider interface {
 
 // Controller represents Service Controller.
 type Controller struct {
+	jwtGenerator     jwt.GeneratorProvider
 	authRepository   auth.RepositoryProvider
 	requestValidator validators.RequestValidator
 }
 
 // NewController returns new Service controller instance.
 func NewController(
+	jwtGenerator jwt.GeneratorProvider,
 	requestValidator validators.RequestValidator,
 	authRepository auth.RepositoryProvider,
 ) *Controller {
 	return &Controller{
+		jwtGenerator:     jwtGenerator,
 		requestValidator: requestValidator,
 		authRepository:   authRepository,
 	}

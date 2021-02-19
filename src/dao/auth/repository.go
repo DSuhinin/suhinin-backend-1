@@ -2,122 +2,69 @@ package auth
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/jmoiron/sqlx"
 
 	"github.com/dsuhinin/suhinin-backend-1/core/errors"
 )
 
-// RepositoryProvider provides an interface to work with `event` entity DAO.
+// RepositoryProvider provides an interface to work with `user` entity DAO.
 type RepositoryProvider interface {
-	// Create creates new `event` record.
-	Create(model *EventModel) (*EventModel, error)
-	// GetByID get `event` record by it's ID.
-	GetByID(ID int) (*EventModel, error)
-	// GetList returns the list of `events` by search criteria.
-	GetList(searchBuilder *EventSearchBuilder) (int, []EventAggregatedWithSystemModel, error)
+	// Create creates new `user` record.
+	Create(model *UserModel) error
+	// GetByEmail get `user` record by it's email.
+	GetByEmail(email string) (*UserModel, error)
 }
 
-// Repository represents `event` entity repository layer.
+// Repository represents `user` entity repository layer.
 type Repository struct {
 	db *sqlx.DB
 }
 
-// NewRepository creates new instance of Repository to work with `event` entity.
+// NewRepository creates new instance of Repository to work with `user` entity.
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		db: db,
 	}
 }
 
-// Create creates new `event` record.
-func (r Repository) Create(model *EventModel) (*EventModel, error) {
-
+// Create creates new `user` record.
+func (r Repository) Create(model *UserModel) error {
 	stmt, err := r.db.PrepareNamed(`
-		INSERT INTO events VALUES (
+		INSERT INTO users VALUES (
 			:id,
-		    :type,
-			:server_id,
-			:system_id,
-			:created_at,
-		    :updated_at
+		    :email,
+			:password,
+			:created_at
 		)`,
 	)
 	if err != nil {
-		return nil, errors.WithMessage(err, "impossible to create prepared statement")
+		return errors.WithMessage(err, "impossible to create prepared statement")
 	}
 
-	result, err := stmt.Exec(&model)
+	_, err = stmt.Exec(&model)
 	if err != nil {
-		return nil, errors.WithMessage(err, "impossible to create `event` record, model: %+v", model)
+		return errors.WithMessage(err, "impossible to create `event` record, model: %+v", model)
 	}
 
-	id, err := result.LastInsertId()
-	if err != nil {
-		return nil, errors.WithMessage(err, "impossible to get last insert `id`")
-	}
-
-	return r.GetByID(int(id))
+	return nil
 }
 
-// GetByID get `event` record by it's ID.
-func (r Repository) GetByID(ID int) (*EventModel, error) {
-	var model EventModel
+// GetByEmail get `user` record by it's email.
+func (r Repository) GetByEmail(email string) (*UserModel, error) {
+	var model UserModel
 	if err := r.db.Get(&model, `
 		SELECT * 
-		FROM events
-		WHERE id = ?
+		FROM users
+		WHERE email = ?
 		LIMIT 1`,
-		ID,
+		email,
 	); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
 		}
 
-		return nil, errors.WithMessage(err, "impossible to get `event` record by `id`: %d", ID)
+		return nil, errors.WithMessage(err, "impossible to get `event` record by `email`: %s", email)
 	}
 	return &model, nil
-}
-
-// GetList returns the list of `events` by search criteria.
-func (r Repository) GetList(searchBuilder *EventSearchBuilder) (int, []EventAggregatedWithSystemModel, error) {
-
-	where, args, limit, offset := searchBuilder.Build()
-	var modelList []EventAggregatedWithSystemModel
-	if err := r.db.Select(&modelList, fmt.Sprintf(`
-		SELECT
-			e.id,
-			e.type,
-			e.created_at,
-			s.customer_id,
-			s.country,
-			s.region,
-			s.city,
-			s.post_code
-		FROM events AS e
-		LEFT JOIN systems AS s ON s.id = e.system_id
-		WHERE %s
-		ORDER BY e.id
-		LIMIT %d, %d`,
-		where,
-		offset,
-		limit,
-	), args...); err != nil {
-		return 0, nil, errors.WithMessage(err, "impossible to get `events` list")
-	}
-
-	var total int
-	if err := r.db.Get(&total, fmt.Sprintf(`
-		SELECT
-			COUNT(*) as count
-		FROM events AS e
-		LEFT JOIN systems AS s ON s.id = e.system_id
-		WHERE %s`,
-		where,
-	), args...); err != nil {
-		return 0, nil, errors.WithMessage(err, "impossible to get total count of `events`")
-	}
-
-	return total, modelList, nil
 }

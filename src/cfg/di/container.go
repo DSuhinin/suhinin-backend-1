@@ -41,6 +41,7 @@ func (c *Container) Build() error {
 		c.registerServiceController,
 		c.registerServiceValidator,
 		c.registerAuthRepository,
+		c.registerJWTGenerator,
 	} {
 		if err := dep(); err != nil {
 			return err

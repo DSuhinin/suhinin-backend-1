@@ -5,6 +5,7 @@ go 1.13
 require (
 	github.com/Storytel/go-mysql-seed v1.0.0
 	github.com/alexsasharegan/dotenv v0.0.0-20171113213728-090a4d1b5d42
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/gocql/gocql v0.0.0-20201209090715-f485b5f9159c
 	github.com/golang/protobuf v1.4.3

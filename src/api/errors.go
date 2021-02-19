@@ -45,15 +45,19 @@ var (
 		"`email` empty or is incorrect",
 	)
 	PasswordEmptyError = errors.NewHTTP400Error(
-		20000,
+		20010,
 		"`password` empty or is incorrect",
 	)
 	ConfirmPasswordEmptyError = errors.NewHTTP400Error(
-		20000,
+		20011,
 		"`confirm_password` empty or is incorrect",
 	)
 	PasswordAndConfirmPasswordNotEqualError = errors.NewHTTP400Error(
-		20000,
+		20012,
 		"`password` and `confirm_password` are not equal",
+	)
+	UserAlreadyExistsError = errors.NewHTTP400Error(
+		20020,
+		"user already exists with provided `email`",
 	)
 )
