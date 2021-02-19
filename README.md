@@ -31,9 +31,12 @@
 $ git clone https://github.com/dsuhinin/suhinin-backend-1.git
 ```
 - go to the project folder root.
-- run `make lint` to run linter over the code.
 - run `make docker_build_image service_start` to build and run everything in Docker.
 - open in a browser `http://localhost:8081`
+
+- run `make lint` to run linter over the code.
+- run `make go_test_unit` to run `unit` tests.
+- run `make docker_build_image service_run_tests` to run `integration` tests.
 
 # Environment Variables
 
@@ -148,7 +151,9 @@ For more information about `Authorization` header [Appendix B. Request headers](
 **Request body**
 
 ```
-{}
+{
+  "text": "this text could be accessible only in case of success authentication and goes from the service"
+}
 ```
 
 **Response body**

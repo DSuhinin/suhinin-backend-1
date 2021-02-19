@@ -18,5 +18,6 @@ require (
 	github.com/sarulabs/di v2.0.0+incompatible
 	github.com/sfreiberg/gotwilio v0.0.0-20201211181435-c426a3710ab5
 	github.com/slack-go/slack v0.7.4
+	github.com/stretchr/testify v1.4.0
 	golang.org/x/crypto v0.0.0-20201217014255-9d1352758620
 )

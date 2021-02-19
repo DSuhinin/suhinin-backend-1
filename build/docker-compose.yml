@@ -29,3 +29,15 @@ services:
       - 8081:80
     volumes:
       - ./web:/static
+
+  test-task-service-integration-tests:
+    build:
+      context: ../
+      dockerfile: build/tests/Dockerfile
+    depends_on:
+      - test-task-service
+      - test-task-service-mysql
+    env_file:
+      - test-task-service.env
+    environment:
+      SERVICE_BASE_URL: http://test-task-service:8080

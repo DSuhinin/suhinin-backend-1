@@ -94,6 +94,6 @@ service_restart: service_stop service_start
 
 service_run_tests:
 	@echo ">>> Running tests over service."
-	@docker-compose $(DOCKER_COMPOSE_OPTIONS) run integration-tests
+	@docker-compose $(DOCKER_COMPOSE_OPTIONS) run test-task-service-integration-tests
 
 service_test: service_stop service_start service_run_tests service_stop

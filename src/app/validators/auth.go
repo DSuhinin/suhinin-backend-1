@@ -46,7 +46,7 @@ func (v *Validator) ValidateSignupRequest(req *request.Signup) error {
 
 // isPasswordValid check that password provided passes required length.
 func isPasswordValid(password string) bool {
-	if len(password) < 6 && len(password) > 254 {
+	if len(password) < 6 || len(password) > 254 {
 		return false
 	}
 
@@ -55,7 +55,7 @@ func isPasswordValid(password string) bool {
 
 // isEmailValid checks if the email provided passes the required structure and length.
 func isEmailValid(email string) bool {
-	if len(email) < 3 && len(email) > 254 {
+	if len(email) < 3 || len(email) > 254 {
 		return false
 	}
 	return emailRegex.MatchString(email)
