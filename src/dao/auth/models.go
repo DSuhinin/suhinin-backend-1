@@ -8,6 +8,23 @@ import (
 	"github.com/dsuhinin/suhinin-backend-1/core/errors"
 )
 
+// TokenModel represents `token` model.
+type TokenModel struct {
+	ID        int       `db:"id"`
+	UserID    int       `db:"user_id"`
+	Token     string    `db:"token"`
+	CreatedAt time.Time `db:"created_at"`
+}
+
+// NewTokenModel creates new instance of Token model.
+func NewTokenModel(user *UserModel, token string) *TokenModel {
+	return &TokenModel{
+		UserID:    user.ID,
+		Token:     token,
+		CreatedAt: time.Now(),
+	}
+}
+
 // UserModel represents `user` model.
 type UserModel struct {
 	ID        int       `db:"id"`

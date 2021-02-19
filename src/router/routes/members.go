@@ -3,10 +3,13 @@ package routes
 import (
 	"net/http"
 
+	"github.com/dsuhinin/suhinin-backend-1/src/dep/jwt"
+
+	"github.com/dsuhinin/suhinin-backend-1/src/dao/auth/repository"
+
 	kitHTTP "github.com/dsuhinin/suhinin-backend-1/core/http"
 
 	"github.com/dsuhinin/suhinin-backend-1/core/http/response"
-	"github.com/dsuhinin/suhinin-backend-1/src/dao/auth"
 	"github.com/dsuhinin/suhinin-backend-1/src/middleware"
 	"github.com/dsuhinin/suhinin-backend-1/src/transport"
 )
@@ -18,13 +21,17 @@ const (
 
 // InitMembersRouteList makes an initialization of /members routes.
 func InitMembersRouteList(
-	r kitHTTP.RouterProvider, t *transport.Transport, authRepository auth.RepositoryProvider,
+	r kitHTTP.RouterProvider,
+	t *transport.Transport,
+	jwtToken jwt.Provider,
+	tokenRepository repository.TokenRepositoryProvider,
 ) {
 	r.Get(GetMembersRoute, func(req *http.Request) response.Provider {
 		return middleware.WithAuthorization(
 			req,
 			t.GetMembers,
-			authRepository,
+			jwtToken,
+			tokenRepository,
 		)
 	})
 }

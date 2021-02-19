@@ -22,12 +22,14 @@ func (c *Container) registerHTTPRouter() error {
 			routes.InitAuthRouteList(
 				r,
 				c.GetServiceTransport(),
-				c.GetAuthRepository(),
+				c.GetJWTToken(),
+				c.GetTokenRepository(),
 			)
 			routes.InitMembersRouteList(
 				r,
 				c.GetServiceTransport(),
-				c.GetAuthRepository(),
+				c.GetJWTToken(),
+				c.GetTokenRepository(),
 			)
 
 			return r, nil

@@ -17,9 +17,10 @@ func (c *Container) registerServiceController() error {
 		DefServiceController,
 		func(ctx di.Context) (handler interface{}, err error) {
 			return controllers.NewController(
-				c.GetJWTGenerator(),
+				c.GetJWTToken(),
 				c.GetServiceValidator(),
-				c.GetAuthRepository(),
+				c.GetUserRepository(),
+				c.GetTokenRepository(),
 			), nil
 		},
 		nil,

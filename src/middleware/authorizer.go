@@ -1,13 +1,15 @@
 package middleware
 
 import (
+	"context"
 	"net/http"
 	"strings"
 
 	"github.com/dsuhinin/suhinin-backend-1/core/http/response"
 
 	"github.com/dsuhinin/suhinin-backend-1/src/api"
-	"github.com/dsuhinin/suhinin-backend-1/src/dao/auth"
+	"github.com/dsuhinin/suhinin-backend-1/src/dao/auth/repository"
+	"github.com/dsuhinin/suhinin-backend-1/src/dep/jwt"
 )
 
 // represents Authentication header list.
@@ -15,9 +17,20 @@ const (
 	ServerAuthorizationKeyHeader = "Authorization"
 )
 
+// supported authorization types.
+const (
+	BearerAuthorization = "Bearer"
+)
+
+// Context `user_id` key.
+const (
+	ContextUserIDKey    = "user_id"
+	ContextUserTokenKey = "user_token"
+)
+
 // WithAuthorization makes validation of Authorization header.
 func WithAuthorization(
-	req *http.Request, callback Callback, authRepository auth.RepositoryProvider,
+	req *http.Request, callback Callback, jwtToken jwt.Provider, tokenRepository repository.TokenRepositoryProvider,
 ) response.Provider {
 
 	authorization := req.Header.Get(ServerAuthorizationKeyHeader)
@@ -29,6 +42,26 @@ func WithAuthorization(
 	if len(authorizationParts) != 2 {
 		return response.New(api.ServerAuthorizationHeaderEmptyError)
 	}
+
+	if authorizationParts[0] != BearerAuthorization {
+		return response.New(api.ServerAuthorizationHeaderEmptyError)
+	}
+
+	userID, err := jwtToken.Verify(authorizationParts[1])
+	if err != nil {
+		return response.New(
+			api.UnauthorizedRequestError.WithMessage("impossible verify JWT token: %+v", err),
+		)
+	}
+
+	if err := tokenRepository.GetByUserIDAndToken(userID, authorizationParts[1]); err != nil {
+		return response.New(
+			api.UnauthorizedRequestError.WithMessage("impossible to get JWT token: %+v", err),
+		)
+	}
+
+	req = req.WithContext(context.WithValue(req.Context(), ContextUserIDKey, userID))
+	req = req.WithContext(context.WithValue(req.Context(), ContextUserTokenKey, authorizationParts[1]))
 
 	return callback(req)
 }

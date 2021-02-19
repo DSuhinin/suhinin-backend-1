@@ -3,6 +3,9 @@ package transport
 import (
 	"net/http"
 
+	"github.com/dsuhinin/suhinin-backend-1/src/api"
+	"github.com/dsuhinin/suhinin-backend-1/src/middleware"
+
 	"github.com/dsuhinin/suhinin-backend-1/core/http/response"
 
 	"github.com/dsuhinin/suhinin-backend-1/src/api/request"
@@ -40,7 +43,13 @@ func (h *Transport) Signup(r *http.Request) response.Provider {
 
 // Signout handles `POST /auth/signout` route.
 func (h *Transport) Signout(r *http.Request) response.Provider {
-	resp, err := h.serviceController.Signout()
+
+	token, ok := r.Context().Value(middleware.ContextUserTokenKey).(string)
+	if !ok {
+		return response.New(api.InternalServerError.WithMessage("impossible to convert JWT token to string"))
+	}
+
+	resp, err := h.serviceController.Signout(token)
 	if err != nil {
 		return response.New(err)
 	}

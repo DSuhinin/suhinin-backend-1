@@ -18,7 +18,7 @@ const (
 
 // General constants.
 const (
-	ServiceName = "server-uptime-admin-backend"
+	ServiceName = "test-task-service"
 )
 
 // Config is an application config object.

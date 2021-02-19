@@ -16,7 +16,7 @@ func (c *Controller) Signin(req *request.Signin) (coreResponse.Provider, error) 
 		return nil, err
 	}
 
-	user, err := c.authRepository.GetByEmail(req.Email)
+	user, err := c.userRepository.GetByEmail(req.Email)
 	if err != nil {
 		return nil, api.InternalServerError.WithMessage("impossible to find user: %+v", err)
 	}
@@ -34,6 +34,10 @@ func (c *Controller) Signin(req *request.Signin) (coreResponse.Provider, error) 
 		return nil, api.InternalServerError.WithMessage("impossible to generate JWT token: %+v", err)
 	}
 
+	if err := c.tokenRepository.Create(auth.NewTokenModel(user, token)); err != nil {
+		return nil, api.InternalServerError.WithMessage("impossible to save toke: %+v", err)
+	}
+
 	return coreResponse.New(response.NewSignin(token)), nil
 }
 
@@ -44,7 +48,7 @@ func (c *Controller) Signup(req *request.Signup) (coreResponse.Provider, error) 
 		return nil, err
 	}
 
-	user, err := c.authRepository.GetByEmail(req.Email)
+	user, err := c.userRepository.GetByEmail(req.Email)
 	if err != nil {
 		return nil, api.InternalServerError.WithMessage("impossible to find user: %+v", err)
 	}
@@ -58,7 +62,7 @@ func (c *Controller) Signup(req *request.Signup) (coreResponse.Provider, error) 
 		return nil, api.InternalServerError.WithMessage("impossible to create a user: %+v", err)
 	}
 
-	if err := c.authRepository.Create(user); err != nil {
+	if err := c.userRepository.Create(user); err != nil {
 		return nil, api.InternalServerError.WithMessage("impossible to create a user: %+v", err)
 	}
 
@@ -66,6 +70,11 @@ func (c *Controller) Signup(req *request.Signup) (coreResponse.Provider, error) 
 }
 
 // Signout makes processing of POST /auth/signout route.
-func (c *Controller) Signout() (coreResponse.Provider, error) {
+func (c *Controller) Signout(token string) (coreResponse.Provider, error) {
+
+	if err := c.tokenRepository.Delete(token); err != nil {
+		return nil, api.InternalServerError.WithMessage("impossible to delete token: %+v", err)
+	}
+
 	return coreResponse.New(nil), nil
 }

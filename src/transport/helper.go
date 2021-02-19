@@ -5,11 +5,24 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
+	"strconv"
 
 	"github.com/dsuhinin/suhinin-backend-1/core/http/response"
 
 	"github.com/dsuhinin/suhinin-backend-1/src/api"
 )
+
+// convertStringToInt converts string to integer helper.
+func convertStringToInt(str string, number *int) response.Provider {
+	int, err := strconv.Atoi(str)
+	if err != nil {
+		return response.New(api.InternalServerError.WithMessage("%+v", err))
+	}
+
+	*number = int
+
+	return nil
+}
 
 // unmarshal makes unmarshalling request body to a request object.
 func unmarshal(reader io.Reader, obj interface{}) response.Provider {

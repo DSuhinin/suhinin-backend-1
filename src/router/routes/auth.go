@@ -4,9 +4,10 @@ import (
 	"net/http"
 
 	kitHTTP "github.com/dsuhinin/suhinin-backend-1/core/http"
-
 	"github.com/dsuhinin/suhinin-backend-1/core/http/response"
-	"github.com/dsuhinin/suhinin-backend-1/src/dao/auth"
+
+	"github.com/dsuhinin/suhinin-backend-1/src/dao/auth/repository"
+	"github.com/dsuhinin/suhinin-backend-1/src/dep/jwt"
 	"github.com/dsuhinin/suhinin-backend-1/src/middleware"
 	"github.com/dsuhinin/suhinin-backend-1/src/transport"
 )
@@ -22,7 +23,8 @@ const (
 func InitAuthRouteList(
 	router kitHTTP.RouterProvider,
 	transport *transport.Transport,
-	authRepository auth.RepositoryProvider,
+	jwtToken jwt.Provider,
+	tokenRepository repository.TokenRepositoryProvider,
 ) {
 	router.Post(SigninRoute, func(req *http.Request) response.Provider {
 		return transport.Signin(req)
@@ -34,7 +36,8 @@ func InitAuthRouteList(
 		return middleware.WithAuthorization(
 			req,
 			transport.Signout,
-			authRepository,
+			jwtToken,
+			tokenRepository,
 		)
 	})
 }

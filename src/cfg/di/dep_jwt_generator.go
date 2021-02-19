@@ -11,19 +11,19 @@ const (
 	DefJWTGenerator = "JWTGenerator"
 )
 
-// registerJWTGenerator dependency registrar.
-func (c *Container) registerJWTGenerator() error {
+// registerJWTToken dependency registrar.
+func (c *Container) registerJWTToken() error {
 
 	return c.RegisterDependency(
 		DefJWTGenerator,
 		func(ctx di.Context) (interface{}, error) {
-			return jwt.NewGenerator(c.GetConfig().GetJWTKey()), nil
+			return jwt.NewToken(c.GetConfig().GetJWTKey()), nil
 		},
 		nil,
 	)
 }
 
-// GetJWTGenerator dependency retriever.
-func (c *Container) GetJWTGenerator() jwt.GeneratorProvider {
-	return c.Container.Get(DefJWTGenerator).(jwt.GeneratorProvider)
+// GetJWTToken dependency retriever.
+func (c *Container) GetJWTToken() jwt.Provider {
+	return c.Container.Get(DefJWTGenerator).(jwt.Provider)
 }

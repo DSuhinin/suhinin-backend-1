@@ -1,35 +1,37 @@
-package auth
+package repository
 
 import (
 	"database/sql"
+
+	"github.com/dsuhinin/suhinin-backend-1/src/dao/auth"
 
 	"github.com/jmoiron/sqlx"
 
 	"github.com/dsuhinin/suhinin-backend-1/core/errors"
 )
 
-// RepositoryProvider provides an interface to work with `user` entity DAO.
-type RepositoryProvider interface {
+// UserRepositoryProvider provides an interface to work with `user` entity DAO.
+type UserRepositoryProvider interface {
 	// Create creates new `user` record.
-	Create(model *UserModel) error
+	Create(model *auth.UserModel) error
 	// GetByEmail get `user` record by it's email.
-	GetByEmail(email string) (*UserModel, error)
+	GetByEmail(email string) (*auth.UserModel, error)
 }
 
-// Repository represents `user` entity repository layer.
-type Repository struct {
+// UserRepository represents `user` entity repository layer.
+type UserRepository struct {
 	db *sqlx.DB
 }
 
-// NewRepository creates new instance of Repository to work with `user` entity.
-func NewRepository(db *sqlx.DB) *Repository {
-	return &Repository{
+// NewUserRepository creates new instance of UserRepository to work with `user` entity.
+func NewUserRepository(db *sqlx.DB) *UserRepository {
+	return &UserRepository{
 		db: db,
 	}
 }
 
 // Create creates new `user` record.
-func (r Repository) Create(model *UserModel) error {
+func (r UserRepository) Create(model *auth.UserModel) error {
 	stmt, err := r.db.PrepareNamed(`
 		INSERT INTO users VALUES (
 			:id,
@@ -51,8 +53,8 @@ func (r Repository) Create(model *UserModel) error {
 }
 
 // GetByEmail get `user` record by it's email.
-func (r Repository) GetByEmail(email string) (*UserModel, error) {
-	var model UserModel
+func (r UserRepository) GetByEmail(email string) (*auth.UserModel, error) {
+	var model auth.UserModel
 	if err := r.db.Get(&model, `
 		SELECT * 
 		FROM users
