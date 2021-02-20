@@ -51,7 +51,7 @@ func TestValidator_ValidateSigninRequest_Error(t *testing.T) {
 			request: request.Signin{
 				Email: "user.email@gmail.com",
 			},
-			error: api.PasswordEmptyError,
+			error: api.PasswordEmptyOrIncorrectError,
 		},
 		{
 			name: "SmallPassword",
@@ -59,7 +59,7 @@ func TestValidator_ValidateSigninRequest_Error(t *testing.T) {
 				Email:    "user.email@gmail.com",
 				Password: "p",
 			},
-			error: api.PasswordEmptyError,
+			error: api.PasswordEmptyOrIncorrectError,
 		},
 	}
 
@@ -110,7 +110,7 @@ func TestValidator_ValidateSignupRequest_Error(t *testing.T) {
 			request: request.Signup{
 				Email: "user.email@gmail.com",
 			},
-			error: api.PasswordEmptyError,
+			error: api.PasswordEmptyOrIncorrectError,
 		},
 		{
 			name: "SmallPassword",
@@ -118,7 +118,7 @@ func TestValidator_ValidateSignupRequest_Error(t *testing.T) {
 				Email:    "user.email@gmail.com",
 				Password: "p",
 			},
-			error: api.PasswordEmptyError,
+			error: api.PasswordEmptyOrIncorrectError,
 		},
 		{
 			name: "EmptyConfirmPassword",
@@ -126,7 +126,7 @@ func TestValidator_ValidateSignupRequest_Error(t *testing.T) {
 				Email:    "user.email@gmail.com",
 				Password: "password",
 			},
-			error: api.ConfirmPasswordEmptyError,
+			error: api.ConfirmPasswordEmptyOrIncorrectError,
 		},
 		{
 			name: "SmallConfirmPassword",
@@ -135,7 +135,7 @@ func TestValidator_ValidateSignupRequest_Error(t *testing.T) {
 				Password:        "password",
 				ConfirmPassword: "p",
 			},
-			error: api.ConfirmPasswordEmptyError,
+			error: api.ConfirmPasswordEmptyOrIncorrectError,
 		},
 		{
 			name: "NotEqualPasswordAndConfirmPassword",

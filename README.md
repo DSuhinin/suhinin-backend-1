@@ -36,7 +36,7 @@ $ git clone https://github.com/dsuhinin/suhinin-backend-1.git
 
 - run `make lint` to run linter over the code.
 - run `make go_test_unit` to run `unit` tests.
-- run `make docker_build_image service_run_tests` to run `integration` tests.
+- run `make docker_build_image service_test` to run `integration` tests.
 
 # Environment Variables
 

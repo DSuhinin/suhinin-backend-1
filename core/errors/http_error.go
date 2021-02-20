@@ -114,7 +114,7 @@ func (e HTTPError) GetContentType() string {
 //
 func (e HTTPError) Error() string {
 	if "" != e.Msg && 0 != e.Code {
-		return fmt.Sprintf(`{"code": %d, "message": "%s"}`, e.Code, e.Msg)
+		return fmt.Sprintf(`{"code":%d,"message":"%s"}`, e.Code, e.Msg)
 	}
 
 	return ""

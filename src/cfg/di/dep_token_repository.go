@@ -2,6 +2,7 @@ package di
 
 import (
 	"github.com/dsuhinin/suhinin-backend-1/core/cfg/di"
+
 	"github.com/dsuhinin/suhinin-backend-1/src/dao/auth/repository"
 )
 

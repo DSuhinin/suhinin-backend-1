@@ -14,7 +14,7 @@ import (
 )
 
 // TestServiceInfoEndpoint test `GET /service/info` endpoint.
-func TestServiceInfoEndpoint(t *testing.T) {
+func TestServiceInfoEndpoint_Ok(t *testing.T) {
 
 	httpRequest, err := http.NewRequest(
 		http.MethodGet,

@@ -3,12 +3,11 @@ package transport
 import (
 	"net/http"
 
-	"github.com/dsuhinin/suhinin-backend-1/src/api"
-	"github.com/dsuhinin/suhinin-backend-1/src/middleware"
-
 	"github.com/dsuhinin/suhinin-backend-1/core/http/response"
 
+	"github.com/dsuhinin/suhinin-backend-1/src/api"
 	"github.com/dsuhinin/suhinin-backend-1/src/api/request"
+	"github.com/dsuhinin/suhinin-backend-1/src/middleware"
 )
 
 // Signin handles `POST /auth/signin` route.

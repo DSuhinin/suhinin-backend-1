@@ -3,11 +3,11 @@ package repository
 import (
 	"database/sql"
 
-	"github.com/dsuhinin/suhinin-backend-1/src/dao/auth"
-
 	"github.com/jmoiron/sqlx"
 
 	"github.com/dsuhinin/suhinin-backend-1/core/errors"
+
+	"github.com/dsuhinin/suhinin-backend-1/src/dao/auth"
 )
 
 // UserRepositoryProvider provides an interface to work with `user` entity DAO.

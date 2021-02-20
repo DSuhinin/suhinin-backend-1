@@ -3,7 +3,7 @@ package routes
 import (
 	"net/http"
 
-	kitHTTP "github.com/dsuhinin/suhinin-backend-1/core/http"
+	coreHTTP "github.com/dsuhinin/suhinin-backend-1/core/http"
 	"github.com/dsuhinin/suhinin-backend-1/core/http/response"
 
 	"github.com/dsuhinin/suhinin-backend-1/src/dao/auth/repository"
@@ -21,7 +21,7 @@ const (
 
 // InitAuthRouteList makes an initialization of /auth routes.
 func InitAuthRouteList(
-	router kitHTTP.RouterProvider,
+	router coreHTTP.RouterProvider,
 	transport *transport.Transport,
 	jwtToken jwt.Provider,
 	tokenRepository repository.TokenRepositoryProvider,

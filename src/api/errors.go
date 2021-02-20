@@ -23,10 +23,6 @@ var (
 		10002,
 		"unauthorized request.",
 	)
-	ServerAuthorizationHeaderEmptyError = errors.NewHTTP401Error(
-		10003,
-		"header `Authorization` not provided, incorrect or empty",
-	)
 	JSONParsingError = errors.NewHTTP400Error(
 		30000,
 		"json parsing error.",
@@ -44,11 +40,11 @@ var (
 		20000,
 		"`email` empty or is incorrect",
 	)
-	PasswordEmptyError = errors.NewHTTP400Error(
+	PasswordEmptyOrIncorrectError = errors.NewHTTP400Error(
 		20010,
 		"`password` empty or is incorrect",
 	)
-	ConfirmPasswordEmptyError = errors.NewHTTP400Error(
+	ConfirmPasswordEmptyOrIncorrectError = errors.NewHTTP400Error(
 		20011,
 		"`confirm_password` empty or is incorrect",
 	)

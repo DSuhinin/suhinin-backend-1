@@ -5,9 +5,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dsuhinin/suhinin-backend-1/core/errors"
-
 	"github.com/dgrijalva/jwt-go"
+
+	"github.com/dsuhinin/suhinin-backend-1/core/errors"
 )
 
 // Provider provides an interface to work with JWT Token.

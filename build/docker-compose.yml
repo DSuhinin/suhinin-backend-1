@@ -18,7 +18,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: test_task_database
     volumes:
-      - ./mysql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./mysql:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
     container_name: test-task-service-mysql

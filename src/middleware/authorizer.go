@@ -37,16 +37,16 @@ func WithAuthorization(
 
 	authorization := req.Header.Get(ServerAuthorizationKeyHeader)
 	if authorization == "" {
-		return response.New(api.ServerAuthorizationHeaderEmptyError)
+		return response.New(api.UnauthorizedRequestError)
 	}
 
 	authorizationParts := strings.Split(authorization, " ")
 	if len(authorizationParts) != 2 {
-		return response.New(api.ServerAuthorizationHeaderEmptyError)
+		return response.New(api.UnauthorizedRequestError)
 	}
 
 	if authorizationParts[0] != BearerAuthorization {
-		return response.New(api.ServerAuthorizationHeaderEmptyError)
+		return response.New(api.UnauthorizedRequestError)
 	}
 
 	userID, err := jwtToken.Verify(authorizationParts[1])
