@@ -1,6 +1,7 @@
 # Test Task Service.
 
 # Topics
+* [Common Info](#common-info)
 * [Prerequisites](#Prerequisites)
 * [Set up and run service](#set-up-and-run-service)
 * [Environment Variables](#environment-variables)
@@ -14,9 +15,19 @@
   * [Service Endpoints](#service-endpoints)
     * [POST /service/status](#get-serviceinfo)
     * [GET /service/info](#get-servicestatus)
-
 * [Appendix A. Response codes](#appendix-a-response-codes)
 * [Appendix B. Request headers](#appendix-b-request-headers)
+
+# Common Info
+- I've spent around 4 hours to build everything from the scratch, the `backend` part.
+- 1 hour I've spent to cover service little bit with `unit` and `integration` tests and prepare everything in Docker. 
+  Test coeverage not 100% but `integration` tests cover each endpoint `happy path`
+- aproximately 1 hour I've spent for `frontend` part to recall it little bit for myself and build UI. It isn't ideal unfortunately.
+- Added additional endpoints for `health` checks so service is ready for `Kubernetes` integration.
+- Integrated DI container. It helps to decouple all things and make services fully testable and well extandable.
+- Decided to use `Makefile` to simplify some commands to `run`, `test`, `lint` code.
+- Integrated `golangci-lint` to fully lint service code. If you will some errors when you run `make lint` then I think 
+  this tool has been updated and it is possible to see new linter errors.
 
 # Prerequisites
 - Golang
