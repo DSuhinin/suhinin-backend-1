@@ -28,6 +28,7 @@
 - Decided to use `Makefile` to simplify some commands to `run`, `test`, `lint` code.
 - Integrated `golangci-lint` to fully lint service code. If you will some errors when you run `make lint` then I think 
   this tool has been updated and it is possible to see new linter errors.
+- Divided code to several layers like: `transport`, `controller`, `validator`, `dao`, etc.
 
 # Prerequisites
 - Golang
